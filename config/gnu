@@ -1,10 +1,10 @@
 [main]
 cxx = g++
 ld = g++
-libs = 
+libs = -llua -ldl
 
 [opt]
-cxxflags = -O3
+cxxflags = -O3 -std=c++11
 
 [dbg]
-cxxflags = -g
+cxxflags = -g -std=c++11
