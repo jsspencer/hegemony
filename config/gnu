@@ -1,0 +1,10 @@
+[main]
+cxx = g++
+ld = g++
+libs = 
+
+[opt]
+cxxflags = -O3
+
+[dbg]
+cxxflags = -g

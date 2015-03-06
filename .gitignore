@@ -1,0 +1,5 @@
+bin/
+dest/
+*.o
+*.x
+make.inc*
