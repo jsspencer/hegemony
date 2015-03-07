@@ -1,6 +1,9 @@
 #include <iostream>
 #include <fstream>
+
+#ifdef _OPENMP
 #include <omp.h>
+#endif
 
 #define STRINGIFY(x) #x
 #define EXPAND(x) STRINGIFY(x)
@@ -39,5 +42,3 @@ int echo_input(const std::string &inp)
         return 0;
     }
 }
-
-
