@@ -1,14 +1,18 @@
 #include <iostream>
 #include <string>
 
-#include "info.h"
 #include "Selene/include/selene.h"
+
+#include "info.h"
+#include "ueg3d.h"
+
 
 int main(int argc, char **argv)
 {
     print_banner();
 
     sel::State L(true);
+    L["UEG3D"].SetClass<UEG3D, int, double, double, double>("init_basis", &UEG3D::init_basis);
 
     if (argc != 2)
     {
