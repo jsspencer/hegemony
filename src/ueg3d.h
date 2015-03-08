@@ -10,6 +10,7 @@ class UEG3D : public BaseUEG<3>
     using BaseUEG::BaseUEG;
 
     double calc_cell(void);
+    inline double vq(KPoint<3>&);
 
     // Simple wrappers.
     // selene (sadly) has problems binding to an inherited method, so wrap the base

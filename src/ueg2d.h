@@ -10,5 +10,6 @@ class UEG2D : public BaseUEG<2>
     using BaseUEG::BaseUEG;
 
     double calc_cell(void);
+    inline double vq(KPoint<2>&);
 
 };

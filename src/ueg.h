@@ -1,9 +1,7 @@
 #pragma once
 
 #include <algorithm>
-#include <array>
 #include <cmath>
-#include <cfloat>
 #include <vector>
 
 #include <iostream>
@@ -27,6 +25,19 @@ class BaseUEG
         : nel(nel), rs(rs), cutoff(cutoff), madelung(madelung) { };
 
     virtual double calc_cell(void) { return -1; };
+    virtual inline double vq(KPoint<ndim>&) {return -1; } ;
+
+    inline double vijab(KPoint<ndim>& ki, KPoint<ndim>& kj, KPoint<ndim>& ka, KPoint<ndim>& kb)
+    {
+        // Check angular momentum is conserved.  Note: we assume spin is...
+        KPoint<ndim> kdiff = ki + kj - ka - kb;
+        for (const int i: kdiff.k)
+        {
+            if (i!=0) return 0.0;
+        }
+        kdiff = ki - ka;
+        return vq(kdiff);
+    }
 
     void init_basis(void)
     {
@@ -36,7 +47,6 @@ class BaseUEG
         // Need to consider all wavevectors up to K in each direction, where K^2/2 = cutoff.
         int nmax = round(ceil(pow(2*cutoff,1.0/2)));
         double npts = double(2*nmax+1);
-        std::cout << "nmax " << nmax << " " << npts << std::endl;
 
         KPoint<ndim> ktest;
         // Consider all wavevectors in the smallest ndim-dimensional cube which contains
