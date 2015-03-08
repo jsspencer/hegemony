@@ -8,6 +8,8 @@
 
 #include "basis.h"
 
+// NOTE: we assume restricted (i.e. Ms=0) electron gases throughout.
+
 template<int ndim>
 class BaseUEG
 {
@@ -73,6 +75,25 @@ class BaseUEG
         }
 
         std::sort(basis.begin(), basis.end());
+
+        // Plane waves are the restricted Hartree--Fock solution.
+        // Calculate single-particle Hartree--Fock eigenvalues using the Aufbau
+        // principle.
+        for (auto ki=basis.begin(); ki!=basis.end(); ki++)
+        {
+            // wavevectors are stored in units of 2\pi/L.
+            double hf_sp = (*ki).kin * pow((2*M_PI)/L,2);
+            if (ki<basis.begin()+nel/2) hf_sp -= madelung/L; // for the <ii|ii> term.
+            for (auto kj=basis.begin(); kj!=basis.begin()+nel/2; kj++)
+            {
+                if (ki!=kj)
+                {
+                    KPoint<ndim> q = (*ki) - (*kj);
+                    hf_sp -= vq(q);
+                }
+            }
+            hf.push_back(hf_sp);
+        }
 
     }
 
