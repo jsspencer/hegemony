@@ -101,7 +101,47 @@ class BaseUEG
             }
             hf.push_back(hf_sp);
         }
+    }
 
+    double MP2(void)
+    {
+        // For closed-shell systems (RHF reference):
+        // E_MP2 = \sum_{ij,ab} \frac{2<ij|ab>(<ab|ij> - <ab|ji>}{e_i + e_j - e_a - e_b}
+        //       = \sum_{ij,a<b} 2\frac{2<ij|ab>(<ab|ij> - <ab|ji>}{e_i + e_j - e_a - e_b}
+        // (Note: due to conservation of momentum and k_i and k_vb are both smaller than k_a and k_b.)
+        double EMP2 = 0.0;
+        KPoint<ndim> q;
+        for (auto ki=basis.begin(); ki!=basis.begin()+nel/2; ki++)
+        {
+            size_t ki_ind = ki - basis.begin();
+            for (auto kj=basis.begin(); kj!=basis.begin()+nel/2; kj++)
+            {
+                size_t kj_ind = kj - basis.begin();
+                for (auto ka=basis.begin()+nel/2; ka!=basis.end(); ka++)
+                {
+                    //kb is now uniquely defined in order to conserve momentum.
+                    //kb->first is the KPoint object, kb->second the index in basis/hf vectors.
+                    auto kb = basis_map.find((*ki) + (*kj) - (*ka));
+                    if (kb != basis_map.end())
+                    {
+                        size_t ka_ind = ka - basis.begin();
+                        //kb exists in the basis, so include the contribution (ki,kj,ka,kb)
+                        //in the MP2 energy.  By construction, momentum symmetry is obeyed.
+                        if (ka-basis.begin() < kb->second)
+                        {
+                            q = (*ki)-(*ka);
+                            double int1 = vq(q);
+                            q = (*kj)-(*ka);
+                            double int2 = vq(q);
+                            EMP2 += ( int1*(2*int1-int2) ) / ( hf[ki_ind] + hf[kj_ind] - hf[ka_ind] - hf[kb->second] );
+                        }
+                    }
+                }
+                // Account for contribution of (j,i) indices if i/=j.
+            }
+        }
+        // Account for contribution of (b,a).
+        return 2*EMP2;
     }
 
 };

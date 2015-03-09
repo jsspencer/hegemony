@@ -12,7 +12,10 @@ int main(int argc, char **argv)
     print_banner();
 
     sel::State L(true);
-    L["UEG3D"].SetClass<UEG3D, int, double, double, double>("init_basis", &UEG3D::init_basis);
+    L["UEG3D"].SetClass<UEG3D, int, double, double, double>(
+            "init_basis", &UEG3D::init_basis,
+            "MP2", &UEG3D::MP2
+            );
 
     if (argc != 2)
     {
