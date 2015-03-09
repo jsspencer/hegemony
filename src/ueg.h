@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <unordered_map>
 #include <vector>
 
 #include <iostream>
@@ -20,7 +21,10 @@ class BaseUEG
     double madelung;
 
     double L;
+
     std::vector<KPoint<ndim>> basis;
+    std::unordered_map<KPoint<ndim>, size_t> basis_map;
+
     std::vector<double> hf;
 
     BaseUEG(int nel, double rs, double cutoff, double madelung)
@@ -81,6 +85,9 @@ class BaseUEG
         // principle.
         for (auto ki=basis.begin(); ki!=basis.end(); ki++)
         {
+            // It is useful to be able to look up the Hartree--Fock energy from a given
+            // wavevector.  Use a hash table to store the index of each wavevector...
+            basis_map[(*ki)] = ki - basis.begin();
             // wavevectors are stored in units of 2\pi/L.
             double hf_sp = (*ki).kin * pow((2*M_PI)/L,2);
             if (ki<basis.begin()+nel/2) hf_sp -= madelung/L; // for the <ii|ii> term.

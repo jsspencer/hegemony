@@ -45,4 +45,24 @@ class KPoint
         return lhs.kin < rhs.kin;
     }
 
+    friend inline bool operator==(const KPoint &lhs, const KPoint &rhs)
+    {
+        return lhs.k == rhs.k;
+    }
+
 };
+
+namespace std {
+    template <int ndim>
+    struct hash<KPoint<ndim>>
+    {
+        std::size_t operator()(const KPoint<ndim>& key) const
+        {
+            std::size_t offset = 4096;
+            std::size_t res = key.k[0];
+            for (int i=1; i<ndim; i++)
+                res ^= (key.k[i] +offset) << 8*i;
+            return res;
+        }
+    };
+}
