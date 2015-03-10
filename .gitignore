@@ -3,3 +3,4 @@ dest/
 *.o
 *.x
 make.inc*
+tags
