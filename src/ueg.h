@@ -108,7 +108,7 @@ class BaseUEG
         // For closed-shell systems (RHF reference):
         // E_MP2 = \sum_{ij,ab} \frac{2<ij|ab>(<ab|ij> - <ab|ji>}{e_i + e_j - e_a - e_b}
         //       = \sum_{ij,a<b} 2\frac{2<ij|ab>(<ab|ij> - <ab|ji>}{e_i + e_j - e_a - e_b}
-        // (Note: due to conservation of momentum and k_i and k_vb are both smaller than k_a and k_b.)
+        // (Note: due to conservation of momentum and k_i and k_j are both smaller than k_a and k_b.)
         double EMP2 = 0.0;
         KPoint<ndim> q;
         for (auto ki=basis.begin(); ki!=basis.begin()+nel/2; ki++)
@@ -137,7 +137,6 @@ class BaseUEG
                         }
                     }
                 }
-                // Account for contribution of (j,i) indices if i/=j.
             }
         }
         // Account for contribution of (b,a).
