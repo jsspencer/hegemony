@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-#include "Selene/include/selene.h"
+#include "third_party/Selene/include/selene.h"
 
 #include "info.h"
 #include "ueg3d.h"
